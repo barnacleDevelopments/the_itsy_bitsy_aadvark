@@ -24,6 +24,8 @@ const adverbs = ["dreadfully", "happily", "stupidly", "awkwardly", "beautifully"
 /**
  * 
  * @param {array} options an array of strings (options)
+ * @param {string} type the type of word.
+ * @description creates a stack of choice objects. 
  */
 
 const createChoiceStack = (options, type) => {
@@ -39,19 +41,18 @@ const createChoiceStack = (options, type) => {
         newStack.choices.push(choice)
       }
     }
-    console.log(newStack)
     return newStack
   }
 
 // create array of questions containing choiceStack objects
 const questions = [
-    new Question("string", "Please choose an animal name", createChoiceStack(animalNames, "animalNames")), 
-    new Question("string", "Please choose an action word ending in 'ed'", createChoiceStack(actionWords1, "actionWords")),
+    new Question("string", "Please choose an animal name", createChoiceStack(animalNames, "name")), 
+    new Question("string", "Please choose an action word ending in 'ed'", createChoiceStack(actionWords1, "verb1")),
     new Question("string", "Please choose an objective", createChoiceStack(objectives, "objective")),
-    new Question("string", "Please choose another action word ending in 'ed'", createChoiceStack(actionWords2, "actionWords")),
-    new Question("string", "Please choose a noun", createChoiceStack(nouns, "nouns")),
-    new Question("string", "Please choose another action word ending in 'ed'", createChoiceStack(actionWords3, "actionWords")),
-    new Question("string", "Please choose an adverb", createChoiceStack(adverbs, "adverbs"))
+    new Question("string", "Please choose another action word ending in 'ed'", createChoiceStack(actionWords2, "verb2")),
+    new Question("string", "Please choose a noun", createChoiceStack(nouns, "noun")),
+    new Question("string", "Please choose another action word ending in 'ed'", createChoiceStack(actionWords3, "verb3")),
+    new Question("string", "Please choose an adverb", createChoiceStack(adverbs, "adverb"))
 ]
 
 module.exports = questions

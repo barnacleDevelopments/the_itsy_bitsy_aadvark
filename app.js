@@ -7,8 +7,8 @@ File: questions.js
 ===========================================
 */
 
-const fs = require("fs")
-const questions = require("./data/questions")
+const fs = require("fs");
+const questions = require("./data/questions");
 // fs.writeFile("./inputText.txt", (contents) => {
 // });
 
@@ -42,13 +42,42 @@ const processTextFile = (filePath, func) => {
   });
 }
 
+/**
+ * 
+ * @param {number} num the text block index value.
+ * @description returns the coresponding word type name to the number provided. 
+ */
+
+const getIndexType = (num) => {
+  switch(num) {
+    case "_1_":
+      return "name"
+    case "_2_":
+      return "verb1"
+    case "_3_":
+      return "objective"
+    case "_4_":
+      return "verb2"
+    case "_5_":
+      return "noun"
+    case "_6_":
+      return "verb3"
+    case "_7_":
+      return "adverb"
+  }
+}
 
 processTextFile("the_story_file.txt", (contents) => {
+  let text = contents.split(" ");
+  let proccessedText = contents
   askMultiQuestions(questions, (anwsers) => {
-    anwsers.forEach(a => {
-      
-    })
-  })
-})
-
-// log output
+    text.forEach(l => {
+      anwsers.forEach(a => {
+        if(a.type === getIndexType(l)) {
+          proccessedText = proccessedText.replace(l, a.text)
+        } 
+      });
+    });
+  });
+  console.log(`\n${proccessedText}`)
+});
