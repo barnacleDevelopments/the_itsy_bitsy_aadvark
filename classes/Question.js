@@ -11,35 +11,33 @@ const readlineSync = require("readline-sync");
 
 module.exports = class Question {
   constructor(type, question, options) {
-    this.type = type,
-    this.content = `\n${question}`,
+    this.type = type;
+    this.content = `\n${question}`;
     this.options = options;
-    this.optionLetters = this.options.choices.map(o => o.letter)
+    this.optionLetters = ["a", "b", "c", "d", "e"]
   }
 
   ask = () => {
+    let optionL = this.optionLetters
     // get the first and last option letters
-    let firstLetter = this.optionLetters[0]
-    let lastLetter = this.optionLetters.reverse()[0] 
+    let firstLetter = optionL[0]
+    let lastLetter = optionL[4]
     let questionContent =  `${this.content} (${firstLetter}-${lastLetter}):\n` 
     this.options.choices.forEach(o => {
-      questionContent = questionContent.concat(
-        `${o.letter}) ${o.text} \n`
-        )
+      questionContent = questionContent.concat(`${o.letter}) ${o.text} \n`);
     });
-
+ 
     // ask inital question amd capture anwser
     let anwser = readlineSync.question(
       questionContent + `(${firstLetter}-${lastLetter}): `
       );
+      
     // validate anwser and ask again if incorect type
-    if(!this.isLetter(anwser)) {
       while(!this.isLetter(anwser)) {
         anwser = readlineSync.question(
           this.content + ` (${firstLetter}-${lastLetter}): `
         );
       }
-    }
    return this.getAnwserValue(anwser)
   }
 
@@ -55,7 +53,15 @@ module.exports = class Question {
   }
 
   isLetter = (anwser) => {
-    return this.optionLetters.includes(anwser.trim())
+    let isL = false
+    
+    this.optionLetters.forEach(o => {
+      if(o === anwser.trim()) {
+        console.log(this.optionLetters)
+        isL = true
+      }
+    });
+    return isL
   }
 
   validateType = (anwser, expectType) => {

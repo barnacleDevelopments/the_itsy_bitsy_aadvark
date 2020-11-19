@@ -8,6 +8,11 @@ File: Choice.js
 */
 
 module.exports = class Choice {
+  /**
+   * 
+   * @param {string} letter a string representation of a letter.
+   * @param {string} text the choice description.
+   */
     constructor(letter, text) {
       this.letter = letter
       this.text = text

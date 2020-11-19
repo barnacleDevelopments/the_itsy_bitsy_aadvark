@@ -7,10 +7,10 @@ File: questions.js
 ===========================================
 */
 
-const fs = require("fs");
-const questions = require("./data/questions");
-// fs.writeFile("./inputText.txt", (contents) => {
-// });
+const processFile = require("./functions/processFile")
+const Choice = require("./classes/Choice");
+const ChoiceStack = require("./classes/ChoiceStack");
+const Question = require("./classes/Question");
 
 /**
  * 
@@ -24,22 +24,6 @@ const askMultiQuestions = (questionArr, func) => {
     anwsers.push(question.ask());
   });
   func(anwsers)
-}
-
-/**
- * 
- * @param {string} filePath the file path location of the text file.
- * @param {function} func a calback function to handle the text.
- */
-
-const processTextFile = (filePath, func) => {
-  fs.readFile(filePath, "utf8", (err, contents) => {
-    if(!err) {
-      func(contents)
-    } else {
-      console.log(err)
-    }
-  });
 }
 
 /**
@@ -67,17 +51,54 @@ const getIndexType = (num) => {
   }
 }
 
-processTextFile("the_story_file.txt", (contents) => {
-  let text = contents.split(" ");
-  let proccessedText = contents
-  askMultiQuestions(questions, (anwsers) => {
-    text.forEach(l => {
-      anwsers.forEach(a => {
-        if(a.type === getIndexType(l)) {
-          proccessedText = proccessedText.replace(l, a.text)
-        } 
+/**
+ * 
+ * @param {array} options an array of strings (options)
+ * @param {string} type the type of word.
+ * @description creates a stack of choice objects. 
+ */
+
+const createChoiceStack = (options, type) => {
+  let newStack = new ChoiceStack(type)
+  let letters = ["a", "b", "c", "d", "e"], 
+      i, 
+      optionsLength = options.length
+
+  if(!optionsLength > 6) {
+    throw console.error("Choice length is too long!");
+  } else {
+    for(i = 0; i < optionsLength; i++) {
+      let choice = new Choice(letters[i], options[i]); 
+      newStack.choices.push(choice)
+    }
+  }
+
+  return newStack
+}
+
+
+processFile("the_choices_file.csv", (content) => {
+  let wordTypes = ["name", "verb1", "objective", "verb2", "noun", "verb3", "adverb"]
+
+  let questions = content.split("\r\n").map((text, i) => {
+    let textArr = text.split(",");
+    let question = textArr.shift();
+    let options = textArr;
+    return new Question("string", question, createChoiceStack(options, wordTypes[i]));
+  });
+
+  processFile("the_story_file.txt", (contents) => {
+    let text = contents.split(" ");
+    let proccessedText = contents;
+    askMultiQuestions(questions, (anwsers) => {
+      text.forEach(l => {
+        anwsers.forEach(a => {
+          if(a.type === getIndexType(l)) {
+            proccessedText = proccessedText.replace(l, a.text)
+          } 
+        });
       });
     });
+    console.log(`\n${proccessedText}`)
   });
-  console.log(`\n${proccessedText}`)
 });
