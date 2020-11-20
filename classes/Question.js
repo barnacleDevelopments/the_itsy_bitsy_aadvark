@@ -57,7 +57,6 @@ module.exports = class Question {
     
     this.optionLetters.forEach(o => {
       if(o === anwser.trim()) {
-        console.log(this.optionLetters)
         isL = true
       }
     });
